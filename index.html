@@ -14,14 +14,21 @@
     <h1>IntrepidPrimes</h1>
     <p>This page calculates Mersenne primes up to a given limit.</p>
 
+    <input type="number" id="limit" placeholder="Enter a limit">
+    <button onclick="calculate()">Calculate Mersenne Primes</button>
+    <p id="result"></p>
+
     <script>
-        /**
- * Calculates Mersenne primes up to a limit provided by user input.
- * 
- * @param {number} limit - The upper limit for calculating Mersenne primes.
- * @returns {number[]} An array of Mersenne primes up to the given limit.
- * @throws {Error} Throws an error if the limit is too large.
- */
+        function calculate() {
+            const limit = document.getElementById('limit').value;
+            try {
+                const primes = calculateMersennePrimes(limit);
+                document.getElementById('result').innerText = `Mersenne primes up to ${limit}: ${primes.join(", ")}`;
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
 function calculateMersennePrimes(limit) {
     if (limit > 100000000) {
         throw new Error("The limit is too large. Please provide a smaller limit.");
