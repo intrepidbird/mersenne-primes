@@ -1,1 +1,1 @@
-# mersenne-primes
+# Mersenne Primes Calculator
