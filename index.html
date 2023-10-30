@@ -1,86 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IntrepidPrimes</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
     <style>
         body {
-            background-color: black;
-            color: skyblue;
-            font-family: Arial, sans-serif;
+            background-color: #f1f8ff;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .result {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .result h3 {
+            color: #007bff;
         }
     </style>
 </head>
 <body>
-    <h1>IntrepidPrimes</h1>
-    <p>This page calculates Mersenne primes up to a given limit.</p>
+    <div class="container">
+        <h1>Mersenne Primes Calculator</h1>
+        <form id="mersenneForm">
+            <div class="form-group">
+                <label for="limit">Enter the limit:</label>
+                <input type="number" class="form-control" id="limit" placeholder="Enter a number" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Calculate</button>
+        </form>
+        <div class="result">
+            <h3>Result:</h3>
+            <p id="resultText"></p>
+        </div>
+    </div>
 
-    <input type="number" id="limit" placeholder="Enter a limit">
-    <button onclick="calculate()">Calculate Mersenne Primes</button>
-    <p id="result"></p>
-
+    <!-- Bootstrap & jQuery JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
     <script>
-        function calculate() {
-            const limit = document.getElementById('limit').value;
-            try {
-                const primes = calculateMersennePrimes(limit);
-                document.getElementById('result').innerText = `Mersenne primes up to ${limit}: ${primes.join(", ")}`;
-            } catch (error) {
-                console.error(error.message);
+        $(document).ready(function() {
+            $('#mersenneForm').submit(function(e) {
+                e.preventDefault();
+                var limit = parseInt($('#limit').val());
+                var result = calculateMersennePrimes(limit);
+                $('#resultText').text(result.join(', '));
+            });
+
+            function calculateMersennePrimes(limit) {
+                var primes = [];
+                for (var i = 2; i <= limit; i++) {
+                    if (isPrime(i)) {
+                        var mersenne = Math.pow(2, i) - 1;
+                        if (isPrime(mersenne)) {
+                            primes.push(mersenne);
+                        }
+                    }
+                }
+                return primes;
             }
-        }
 
-function calculateMersennePrimes(limit) {
-    if (limit > 100000000) {
-        throw new Error("The limit is too large. Please provide a smaller limit.");
-    }
-
-    /**
-     * Checks if a number is prime.
-     *
-     * @param {number} num - The number to check for primality.
-     * @returns {boolean} True if the number is prime, false otherwise.
-     */
-    function isPrime(num) {
-        if (num <= 1) {
-            return false;
-        }
-        for (let i = 2; i <= Math.sqrt(num); i++) {
-            if (num % i === 0) {
-                return false;
+            function isPrime(num) {
+                if (num <= 1) {
+                    return false;
+                }
+                for (var i = 2; i <= Math.sqrt(num); i++) {
+                    if (num % i === 0) {
+                        return false;
+                    }
+                }
+                return true;
             }
-        }
-        return true;
-    }
-
-    /**
-     * Checks if a number is a Mersenne prime.
-     *
-     * @param {number} num - The number to check for Mersenne primality.
-     * @returns {boolean} True if the number is a Mersenne prime, false otherwise.
-     */
-    function isMersennePrime(num) {
-        let mersenneNum = Math.pow(2, num) - 1;
-        return isPrime(mersenneNum);
-    }
-
-    let mersennePrimes = [];
-    for (let i = 2; i <= limit; i++) {
-        if (isMersennePrime(i)) {
-            mersennePrimes.push(i);
-        }
-    }
-    return mersennePrimes;
-}
-
-// Usage Example
-
-try {
-    const limit = 1000;
-    const primes = calculateMersennePrimes(limit);
-    console.log(`Mersenne primes up to ${limit}: ${primes.join(", ")}`);
-} catch (error) {
-    console.error(error.message);
-}
+        });
     </script>
 </body>
 </html>
